@@ -5,10 +5,11 @@
 ## Introduction
 
 GOEMod is a coupled model of steady-state groundwater flow, overland flow, hillslope diffusion and stream incision. The model was inspired by a coupled streamflow and groundwater flow model by de Vries (1994), and adds erosion processes to this model. The model is simplified in that it simulates water fluxes and erosion in a 2D cross-section that runs perpendicular to the direction of a series of streams. Erosion and transport in the out-of-plane direction are taken into account by integrating sediment fluxes for a fixed upstream area. The model simulates the evolution of a stream network and shows the importance of groundwater capture, in which faster incising streams draw the watertable below neighbouring streams, which fall dry and stop incising.
+The model code was used to explore the link between drainage density and groundwater flow, follow this link for a discussion paper on the results: [https://doi.org/10.5194/esurf-2021-33](https://doi.org/10.5194/esurf-2021-33)
 
 
 ![](fig/modelled_surface_and_watertable_base_case_small.png)
-
+*Example modeled cross section that shows the incision of an initial flat topography with a small perturbation after a runtime of 10,000 years*
 
 
 ## Getting started
