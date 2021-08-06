@@ -1,6 +1,7 @@
 # GOEMod: Groundwater flow, overland flow and erosion model
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4663728.svg)](https://doi.org/10.5281/zenodo.4663728)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4663727.svg)](https://doi.org/10.5281/zenodo.4663727)
+
 
 ## Introduction
 
@@ -46,9 +47,9 @@ Luijendijk, E.: Transmissivity and groundwater flow exert a strong influence on 
 
 The model code itself has also been published at Zenodo:
 
-Elco Luijendijk. (2021). GOEMod: groundwater flow, overland flow and erosion model (v1.0). Zenodo. https://doi.org/10.5281/zenodo.4663728
+Elco Luijendijk. (2021). GOEMod: groundwater flow, overland flow and erosion model (v1.0). Zenodo. https://doi.org/10.5281/zenodo.4663727
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4663728.svg)](https://doi.org/10.5281/zenodo.4663728)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4663727.svg)](https://doi.org/10.5281/zenodo.4663727)
 
 
 ## License
