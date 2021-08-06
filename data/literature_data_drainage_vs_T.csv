@@ -1,0 +1,14 @@
+source,DOI,area,area2,drainage_density,drainage_density_std,river_incision,watertable_depth,stream_slope,log_K,log_K_std,log_T
+,,,,km/km2,,m,m,m/m,m/s,,m2/s
+de Vries (1994),https://doi.org/10.1016/0022-1694(94)90157-0,southern Netherlands,,0.5,,3,,0.0004,,,-2
+Bloomington et al. (2011),https://doi.org/10.1002/hyp.8024,"Thames basin, UK",Diamicton,0.88,,4.42,,,-8,,
+Bloomington et al. (2011),https://doi.org/10.1002/hyp.8024,"Thames basin, UK",Thames,0.96,,12.51,,,-10,,
+Bloomington et al. (2011),https://doi.org/10.1002/hyp.8024,"Thames basin, UK",Chalk,0.54,,55.01,,,-3.47,,
+Bloomington et al. (2011),https://doi.org/10.1002/hyp.8024,"Thames basin, UK",Gault,1.49,,5.92,,,-9.3,,
+Bloomington et al. (2011),https://doi.org/10.1002/hyp.8024,"Thames basin, UK",Lr. Greensand,0.95,,24.8,,,-5.28,,
+Bloomington et al. (2011),https://doi.org/10.1002/hyp.8024,"Thames basin, UK",Up. Jurassic,1.28,,8.31,,,-8.3,,
+Bloomington et al. (2011),https://doi.org/10.1002/hyp.8024,"Thames basin, UK",Oolites,0.56,,43.07,,,-3.66,,
+Bloomington et al. (2011),https://doi.org/10.1002/hyp.8024,"Thames basin, UK",Wealden,1.26,,10.38,,,-9,,
+Bloomington et al. (2011),https://doi.org/10.1002/hyp.8024,"Thames basin, UK",Lias,1.39,,12.69,,,-9,,
+"Luo and Stepinski (2007), Luo et al. (2010)",https://doi.org/10.1016/j.geomorph.2007.10.014,"Cascades, Oregon, USA",Quaternary,0.27,0.23,50,,,-3.5,1,
+"Luo and Stepinski (2007), Luo et al. (2010)",https://doi.org/10.1016/j.geomorph.2007.10.014,"Cascades, Oregon, USA",Tertiary,0.71,0.37,150,,,-7,1,

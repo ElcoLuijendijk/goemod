@@ -42,10 +42,10 @@ class ModelParams:
     dt = 1.0 * year
 
     #n_timesteps = 1000
-    total_runtime = 1e5 * year
+    total_runtime = 1e4 * year
 
     # dimensions of model domain in x direction, perpendicular to streams
-    width = 10000
+    width = 20000
 
     #
     dx = 5.0
@@ -54,11 +54,11 @@ class ModelParams:
     fixed_upstream_length = True
 
     # upstream length: length of contributing area to streams, upstream from the modeled 2D cross section
-    upstream_length = width / 2.0
+    upstream_length = 10e3
 
     # downstream length: length to downstream boundary with fixed elevation
     # used to calculate stream slope if recalculate_slope = True
-    downstream_length = width / 2.0
+    downstream_length = 10e3
 
     # initial relief
     initial_relief = 0.5
@@ -66,7 +66,22 @@ class ModelParams:
     
     #
     use_relief_from_file = True
-    relief_file = 'default_topography.csv'
+    #relief_input_file = 'saved_topographies/default_topography_esurf_paper_revision.csv'
+    # uncomment the next lines to use an incised topography as initial topography
+    # this was used for the model runs to test the persistence of streams in the revised manuscript
+    relief_input_file = 'saved_topographies/saved_final_topography_base_case_1e4yr.csv'
+    
+    # save initial topography
+    save_initial_topography = False
+
+    # name of file with initial topography data
+    initial_topography_file = 'saved_initial_topography.csv'
+    
+    # save the generated final topography to a new file
+    save_final_topography = False
+
+    # name of file with final topography data
+    final_topography_file = 'saved_final_topography.csv'
 
     #
     #max_z_change_limit = 0.1
@@ -97,7 +112,7 @@ class ModelParams:
     average_rch = False
 
     # transmissivity (m2/sec)
-    T = 1.0e-3
+    T = 1.0e-2
 
     # erosion parameters:
     #rho_s = 2650.0
@@ -106,7 +121,7 @@ class ModelParams:
     ## These are nicely theoretically justified for an average sand with diameter of 0.3 mm
     ## note that the manuscript contains an inconsistency, if kf=0.011 is used as suggested in eq. 19
     ## then the term 1 / (rho_s * (1- porosity)) drops out of eq. 4.
-    k_f = 0.316
+    k_f = 10**(3.1)
     m = 1.8
     n = 2.1
     
@@ -119,17 +134,22 @@ class ModelParams:
     K_n = 25.0
 
     # channel slope
-    S_init = S = 5.0e-3
+    S_init = S = 4.0e-4
     
     #
     recalculate_slope = True
 
+    # baselevel change (m/s)
+    U = -2e-5 / year
+    # fast baselevel drop scenario
+    #U = -1e-3 / year
+    
     # parameters relating channel width and discharge, based on compilation by van den Berg (1995)
     k_w = 3.65
     omega = 0.5
 
     # slope of stream bed perpendicular to flow direction
-    St = 0.05
+    St = 0.002
     
     # variable timestepping
     variable_dt = True
@@ -158,8 +178,7 @@ class ModelParams:
 ################################################
 ## Set up parameter ranges for sensitivity analysis or parameter space exploration
 ################################################
-model_name = 'sensitivity_all'
-#model_name = 'Ts'
+model_name = 'sensitivity'
 
 
 class ParameterRanges:
@@ -185,15 +204,15 @@ class ParameterRanges:
     # runs
     initial_base_run = True
     
-    P_s = np.array([0.5, 0.75, 1.0, 1.25]) / year
-    T_s = 10**np.arange(-5.0, -0.5, 0.5)
-    specific_yield_s = np.array([0.15, 0.3, 0.4, 0.5])
-    K_d_s = np.array([4.0e-5, 1e-4, 1e-3, 1e-2, 4e-2]) / year
-    S_init_s = np.array([1e-4, 5e-4, 1e-3, 5e-3, 1e-2, 5e-2])
-    n_s = np.array([1.0, 1.4, 1.8, 2.2, 2.6])
+    nsteps = 10
     
-    #T_s = [1e-3, 1e-2, 1e-1]
-    
+    # parameter ranges:
+    P_s = np.linspace(0.25, 1.5, nsteps) / year
+    specific_yield_s = np.linspace(0.1, 0.5, nsteps)
+    K_d_s = np.linspace(4.0e-5, 4e-2, nsteps) / year
+    k_f_s = 10**np.linspace(2.3, 4.2, nsteps)
+    U_s = -10**np.linspace(-5, -3, nsteps) / year
+        
 
 ################################################
 ## Generate an id number for this particular model run
@@ -358,9 +377,9 @@ for model_run, param_set in enumerate(param_list):
         Parameters.S_init, Parameters.St, 
         Parameters.k_f, Parameters.K_n, 
         Parameters.n, Parameters.m, Parameters.k_w, 
-        Parameters.omega, Parameters.K_d, Parameters.recalculate_slope,
+        Parameters.omega, Parameters.K_d, Parameters.recalculate_slope, Parameters.U,
         variable_dt=mp.variable_dt, max_dt=mp.max_dt, 
-        use_relief_from_file=Parameters.use_relief_from_file, relief_file=Parameters.relief_file)
+        use_relief_from_file=Parameters.use_relief_from_file, relief_input_file=Parameters.relief_input_file)
 
     # copy model results
     (times, x, zs, hs, dzs, Q_baseflows, Q_overland_flows, n_str_of, 
@@ -415,6 +434,7 @@ df['incision_rate_m_per_yr'] = -incision_rates * year
 df['avg_watertable_depth_m'] = wt_depth_avg 
 df['ratio_overland_flow_baseflow'] = ratio_overland_and_baseflows
 df['ratio_overland_and_baseflow_erosion'] = ratio_overland_and_baseflow_erosion
+df['min_elevation'] = zs[-1].min()
 
 fn = 'model_results/model_results_%i_runs_%0.0fyrs_%s.csv' \
     % (len(df), mp.total_runtime / year, output_file_adj)
