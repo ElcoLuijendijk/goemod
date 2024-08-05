@@ -38,7 +38,7 @@ class ModelParams:
     year = 365.25 * day
     kyr = 1e3 * year
 
-    # timestep
+    # length of single timestep
     dt = 1.0 * year
 
     #n_timesteps = 1000
@@ -47,10 +47,10 @@ class ModelParams:
     # dimensions of model domain in x direction, perpendicular to streams
     width = 20000
 
-    #
+    # grid cell size
     dx = 5.0
 
-    #
+    # fixed or variable length of upstream (out of plane) length of streams
     fixed_upstream_length = True
 
     # upstream length: length of contributing area to streams, upstream from the modeled 2D cross section
@@ -60,11 +60,16 @@ class ModelParams:
     # used to calculate stream slope if recalculate_slope = True
     downstream_length = 10e3
 
-    # initial relief
+    # initial relief (m)
     initial_relief = 0.5
+    
+    # number of segments for the randmly calculated initial topographic relief
     n_initial_topo_segments = 200
     
-    #
+    # average initial elevation (m)
+    init_z = 0.0
+    
+    # use a saved relief file as initial relief
     use_relief_from_file = True
     #relief_input_file = 'saved_topographies/default_topography_esurf_paper_revision.csv'
     # uncomment the next lines to use an incised topography as initial topography
@@ -74,7 +79,7 @@ class ModelParams:
     # save initial topography
     save_initial_topography = False
 
-    # name of file with initial topography data
+    # name of file with initial topography data to save
     initial_topography_file = 'saved_initial_topography.csv'
     
     # save the generated final topography to a new file
@@ -92,26 +97,37 @@ class ModelParams:
     # in the model domain / cross-section
     upstream_aspect_ratio = 1.0
 
-    # precipitation (=precip - evapotranspiration)
+    # precipitation rate
     P = 0.75 / year
     
-    #
+    # duration of individual precipitation events
+    hour = 3600.
+    day = 24 * hour
+    precipitation_duration = 3 * hour
+
+    # multiplier to increase the precipitation depth for events
+    # note that the precipitation frequency distribution is hard-coded for now
+    precip_event_multiplier = 1.0
+
+    # time range for which to calculate precipitation distribution
     precip_return_time = 1.0 * year
     
     # infiltration capacity
     infiltration_capacity = 1.0e-4
 
-    # evapotranspiration
+    # evapotranspiration rate
     ET = 0.375 / year
 
     # overland flow vs recharge parameters
+    # porosity of the soil
     phi = 0.20
+    # specific yield of the soil
     specific_yield = 0.20
 
-    # average recharge or calculate spatially distributed values
+    # use an averaged recharge rate for the entire profile, or calculate spatially distributed values based on P, local saturation overland flow and ET
     average_rch = False
 
-    # transmissivity (m2/sec)
+    # transmissivity of the subsurface (m2/sec)
     T = 1.0e-2
 
     # erosion parameters:
@@ -125,7 +141,7 @@ class ModelParams:
     m = 1.8
     n = 2.1
     
-    # hillslope diffusion
+    # hillslope diffusion coefficient
     K_d = 10**-2.0 / year
 
     # Manning coefficient
@@ -133,10 +149,11 @@ class ModelParams:
     #K_n = 1.0 / 0.035
     K_n = 25.0
 
-    # channel slope
+    # channel slope in the downstream direction
     S_init = S = 4.0e-4
     
-    #
+    # keep the slope constant or recalculate based on stream incision and downstream baselevel change rate
+    #recalculate_slope = False
     recalculate_slope = True
 
     # baselevel change (m/s)
@@ -166,19 +183,11 @@ class ModelParams:
     # minimum absolte change in relief in on timestep
     min_abs_dz = 0.001
 
-    #
-    init_z = 0.0
-
-    # precipitation duration
-    hour = 3600.
-    day = 24 * hour
-    precipitation_duration = 3 * hour
-
 
 ################################################
 ## Set up parameter ranges for sensitivity analysis or parameter space exploration
 ################################################
-model_name = 'sensitivity'
+model_name = 'precip_extremes'
 
 
 class ParameterRanges:
@@ -189,8 +198,8 @@ class ParameterRanges:
     the model will look for any variable ending with _s below and then look for the
     corresponding variable in model_parameters.py
 
-    each _s variable should be a list of values, beo.py will replace the variable
-    in ModelParams with each item in the list consecutively
+    each _s variable should be a list or array of values. The default value of the variable
+    in ModelParams will then be replaced with each item in the list consecutively
     """
 
     year = 365.25 * 24 * 60 * 60.0
@@ -207,12 +216,14 @@ class ParameterRanges:
     nsteps = 10
     
     # parameter ranges:
-    P_s = np.linspace(0.25, 1.5, nsteps) / year
-    specific_yield_s = np.linspace(0.1, 0.5, nsteps)
-    K_d_s = np.linspace(4.0e-5, 4e-2, nsteps) / year
-    k_f_s = 10**np.linspace(2.3, 4.2, nsteps)
-    U_s = -10**np.linspace(-5, -3, nsteps) / year
-        
+    #P_s = np.linspace(0.25, 1.5, nsteps) / year
+    #specific_yield_s = np.linspace(0.1, 0.5, nsteps)
+    #K_d_s = np.linspace(4.0e-5, 4e-2, nsteps) / year
+    #k_f_s = 10**np.linspace(2.3, 4.2, nsteps)
+    #U_s = -10**np.linspace(-5, -3, nsteps) / year
+
+    T_s = [1.0e-3, 1.0e-2, 1.0e-1]
+    #precip_event_multiplier_s = [1.0, 2.0, 3.0]   
 
 ################################################
 ## Generate an id number for this particular model run
@@ -379,7 +390,8 @@ for model_run, param_set in enumerate(param_list):
         Parameters.n, Parameters.m, Parameters.k_w, 
         Parameters.omega, Parameters.K_d, Parameters.recalculate_slope, Parameters.U,
         variable_dt=mp.variable_dt, max_dt=mp.max_dt, 
-        use_relief_from_file=Parameters.use_relief_from_file, relief_input_file=Parameters.relief_input_file)
+        use_relief_from_file=Parameters.use_relief_from_file, relief_input_file=Parameters.relief_input_file,
+        precip_event_multiplier=Parameters.precip_event_multiplier)
 
     # copy model results
     (times, x, zs, hs, dzs, Q_baseflows, Q_overland_flows, n_str_of, 

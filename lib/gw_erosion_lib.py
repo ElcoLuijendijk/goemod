@@ -48,7 +48,7 @@ def percipitation_return_time_func(gev_shape, gev_loc, gev_disp, return_time):
     return x_gev
 
 
-def calculate_precip_events(P, precipitation_duration):
+def calculate_precip_events(P, precipitation_duration, precip_event_multiplier):
     
     """
     
@@ -67,6 +67,11 @@ def calculate_precip_events(P, precipitation_duration):
     gev_shape, gev_loc, gev_disp = find_gev_dist_params(precipitation_duration)
 
     precip_depths = percipitation_return_time_func(gev_shape, gev_loc, gev_disp, Ts) * 1e-3
+
+    # multiplier to increase the preciptiation depth of all events
+    # because the total P remains the same and the summing of precip starts with the least frequent, heaviest event in the distribution
+    # this acts to increase the severity of extreme events
+    precip_depths = precip_depths * precip_event_multiplier
 
     # find cumulative total of all precipitation events
     precip_totals = precip_depths * precip_freqs
@@ -94,6 +99,8 @@ def calculate_precip_events(P, precipitation_duration):
 
     precip_depths = precip_depths[:ind]
     precip_freqs = precip_freqs[:ind]
+
+    print(f"max precip in {precipitation_duration / 3600} hrs = {precip_depths.max():0.3f} m")
 
     # find cumulative total
     precip_totals = precip_depths * precip_freqs
@@ -812,15 +819,14 @@ def model_gwflow_and_erosion(width, dx,
                              max_dt=500 * 365.25 * 24 * 3600.,
                              include_stream_erosion_in_hillslope_diff=False,
                              remove_out_of_plane_gw=True,
+                             precip_event_multiplier=1.0,
                              use_relief_from_file=False,
                              relief_input_file='default_topography.csv',
                              save_initial_topography=False, initial_topography_file='initial_topography.csv',
                              save_final_topography=False, final_topography_file='final_topography.csv',
                              debug=False):
     
-    """
-    
-    """
+
     
     report_interval = 200
     
@@ -872,8 +878,8 @@ def model_gwflow_and_erosion(width, dx,
     
     ## set up rainfall depths array
     precip_depths, precip_freqs, precip_totals, precip_total = \
-        calculate_precip_events(P, precipitation_duration)
-
+        calculate_precip_events(P, precipitation_duration, precip_event_multiplier)
+    
     ##########
     # set up arrays for loop
 
