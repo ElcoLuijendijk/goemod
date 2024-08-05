@@ -6,7 +6,7 @@
 ## Introduction
 
 GOEMod is a coupled model of steady-state groundwater flow, overland flow, hillslope diffusion and stream incision. The model was inspired by a coupled streamflow and groundwater flow model by de Vries (1994), and adds erosion processes to this model. The model is simplified in that it simulates water fluxes and erosion in a 2D cross-section that runs perpendicular to the direction of a series of streams. Erosion and transport in the out-of-plane direction are taken into account by integrating sediment fluxes for a fixed upstream area. The model simulates the evolution of a stream network and shows the importance of groundwater capture, in which faster incising streams draw the watertable below neighbouring streams, which fall dry and stop incising.
-The model code was used to explore the link between drainage density and groundwater flow, follow this link for a discussion paper on the results: [https://doi.org/10.5194/esurf-2021-33](https://doi.org/10.5194/esurf-2021-33)
+The model code was used to explore the link between drainage density and groundwater flow, follow this link for a paper on the results: [https://doi.org/10.5194/esurf-10-1-2022](https://doi.org/10.5194/esurf-10-1-2022)
 
 
 ![](fig/modelled_surface_and_watertable_base_case_small.png)
@@ -37,13 +37,13 @@ Note that all of these modules and Jupyter are included in a Python distribution
 
 
 ## Authors
-**Elco Luijendijk**, <elco.luijendijk-at-posteo.de>
+**Elco Luijendijk**, <elco.luijendijk-at-uib.no>
 
 
 ## Reference
-The model code and results are described in a manuscript that is under review at the journal Earth Surface Dynamics:
+The model code and results are described in the following paper in the journal Earth Surface Dynamics:
 
-Luijendijk, E.: Transmissivity and groundwater flow exert a strong influence on drainage density, Earth Surf. Dynam. Discuss. [preprint], [https://doi.org/10.5194/esurf-2021-33](https://doi.org/10.5194/esurf-2021-33), in review, 2021. 
+Luijendijk, E.: Transmissivity and groundwater flow exert a strong influence on drainage density, Earth Surf. Dynam., 10, 1–22, https://doi.org/10.5194/esurf-10-1-2022, 2022. 
 
 The model code itself has also been published at Zenodo:
 
