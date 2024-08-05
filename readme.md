@@ -10,6 +10,7 @@ The model code was used to explore the link between drainage density and groundw
 
 
 ![](fig/modelled_surface_and_watertable_base_case_small.png)
+
 *Example modeled cross section that shows the incision of an initial flat topography with a small perturbation after a runtime of 10,000 years*
 
 
@@ -32,8 +33,6 @@ GOEMod requires the following Python modules:
 [numpy](https://numpy.org/), [matplotlib](https://matplotlib.org/), [pandas](https://pandas.pydata.org/)
 
 In addition [Jupyter](https://jupyter.org/) needs to be installed to be able to run the notebooks.
-
-Note that all of these modules and Jupyter are included in a Python distribution such as [Anaconda](https://www.anaconda.com/distribution/)
 
 
 ## Authors
